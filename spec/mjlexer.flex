@@ -71,7 +71,6 @@ import java_cup.runtime.Symbol;
 "{"   { return new_symbol(sym.LEFT_BRACE, yytext()); }
 "}"   { return new_symbol(sym.RIGHT_BRACE, yytext()); }
 
-
 <YYINITIAL> "//"  { yybegin(COMMENT); }
 <COMMENT> .       { yybegin(COMMENT); }
 <COMMENT> "\r\n"  { yybegin(YYINITIAL); }
