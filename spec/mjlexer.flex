@@ -33,17 +33,17 @@ import java_cup.runtime.Symbol;
 "\f" 	{ }
 
 "program"   { return new_symbol(sym.PROGRAM, yytext()); }
-"break" 	{ return new_symbol(sym.BREAK, yytext()); }
-"const" 	{ return new_symbol(sym.CONST, yytext()); }
-"else" 		{ return new_symbol(sym.ELSE, yytext()); }
-"if" 		{ return new_symbol(sym.IF, yytext()); }
-"new" 		{ return new_symbol(sym.NEW, yytext()); }
-"print" 	{ return new_symbol(sym.PRINT, yytext()); }
+"break"     { return new_symbol(sym.BREAK, yytext()); }
+"const"     { return new_symbol(sym.CONST, yytext()); }
+"else"      { return new_symbol(sym.ELSE, yytext()); }
+"if"        { return new_symbol(sym.IF, yytext()); }
+"new"       { return new_symbol(sym.NEW, yytext()); }
+"print"     { return new_symbol(sym.PRINT, yytext()); }
 "read"      { return new_symbol(sym.READ, yytext()); }
-"return" 	{ return new_symbol(sym.RETURN, yytext()); }
-"void" 		{ return new_symbol(sym.VOID, yytext()); }
-"continue" 	{ return new_symbol(sym.CONTINUE, yytext()); }
-"for" 		{ return new_symbol(sym.FOR, yytext()); }
+"return"    { return new_symbol(sym.RETURN, yytext()); }
+"void"      { return new_symbol(sym.VOID, yytext()); }
+"continue"  { return new_symbol(sym.CONTINUE, yytext()); }
+"for"       { return new_symbol(sym.FOR, yytext()); }
 
 "+"   { return new_symbol(sym.PLUS, yytext()); }
 "-"   { return new_symbol(sym.MINUS, yytext()); }
