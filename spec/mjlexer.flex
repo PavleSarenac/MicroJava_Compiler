@@ -39,7 +39,7 @@ import java_cup.runtime.Symbol;
 "if" 		{ return new_symbol(sym.IF, yytext()); }
 "new" 		{ return new_symbol(sym.NEW, yytext()); }
 "print" 	{ return new_symbol(sym.PRINT, yytext()); }
-"read" 	    { return new_symbol(sym.READ, yytext()); }
+"read"      { return new_symbol(sym.READ, yytext()); }
 "return" 	{ return new_symbol(sym.RETURN, yytext()); }
 "void" 		{ return new_symbol(sym.VOID, yytext()); }
 "continue" 	{ return new_symbol(sym.CONTINUE, yytext()); }
@@ -69,7 +69,7 @@ import java_cup.runtime.Symbol;
 "["   { return new_symbol(sym.LEFT_BRACKET, yytext()); }
 "]"   { return new_symbol(sym.RIGHT_BRACKET, yytext()); }
 "{"   { return new_symbol(sym.LEFT_BRACE, yytext()); }
-"}"	  { return new_symbol(sym.RIGHT_BRACE, yytext()); }
+"}"   { return new_symbol(sym.RIGHT_BRACE, yytext()); }
 
 
 <YYINITIAL> "//"  { yybegin(COMMENT); }
