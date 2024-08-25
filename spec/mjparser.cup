@@ -1,13 +1,13 @@
 package rs.ac.bg.etf.pp1;
-
+ 
 import java_cup.runtime.*;
 import org.apache.log4j.*;
 import rs.ac.bg.etf.pp1.ast.*;
-
+ 
 parser code {:
 	private Logger logger = Logger.getLogger(getClass());
 	private boolean isErrorDetected = false;
-
+ 
 	public boolean isSyntaxAnalysisErrorDetected() {
 		return isErrorDetected;
 	}
@@ -30,7 +30,7 @@ parser code {:
     public void syntax_error(Symbol cur_token) {
         report_error("Syntax error", cur_token);
     }
-     
+    
     public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
         report_fatal_error("Fatal error, parsing must be stopped", cur_token);
     }
@@ -40,7 +40,7 @@ parser code {:
       report_error(message, info);
     }
 :}
-
+ 
 scan with {:
 	Symbol symbol = this.getScanner().next_token();
 	if (symbol != null && symbol.value != null) {
@@ -50,11 +50,17 @@ scan with {:
 	}
 	return symbol;
 :}
-
+ 
 terminal PROGRAM, BREAK, CONST, ELSE, IF, NEW, PRINT, READ, RETURN, VOID, CONTINUE, FOR;
 terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, LOGICAL_AND, LOGICAL_OR, ASSIGN, INCREMENT, DECREMENT, SEMICOLON, COLON, COMMA, LEFT_PARENTHESES, RIGHT_PARENTHESES, LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE;
 terminal NUMBER, BOOLEAN, CHARACTER, IDENTIFICATOR;
-
-nonterminal Program;
-
-Program ::= PROGRAM IDENTIFICATOR LEFT_BRACE RIGHT_BRACE;
+ 
+nonterminal Program, GlobalDeclList, GlobalDecl, ConstDecl, VarDecl;
+ 
+Program ::= PROGRAM IDENTIFICATOR GlobalDeclList LEFT_BRACE RIGHT_BRACE;
+ 
+GlobalDeclList ::= GlobalDeclList GlobalDecl
+                 | /* epsilon */;
+                 
+GlobalDecl ::= ConstDecl
+             | VarDecl;
