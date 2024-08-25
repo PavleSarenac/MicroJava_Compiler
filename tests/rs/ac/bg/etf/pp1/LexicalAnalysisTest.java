@@ -25,17 +25,24 @@ public class LexicalAnalysisTest {
 		Reader br = null;
 		try {
 			
-			File sourceCode = new File("tests/official_microjava_programs/test302.mj");	
+			File sourceCode = new File("tests/my_microjava_programs/my_program.mj");	
 			log.info("Compiling source file: " + sourceCode.getAbsolutePath());
 			
 			br = new BufferedReader(new FileReader(sourceCode));
 			
+			log.info("Starting lexical analysis.");
+			
 			Yylex lexer = new Yylex(br);
 			Symbol currToken = null;
 			while ((currToken = lexer.next_token()).sym != sym.EOF) {
-				if (currToken != null && currToken.value != null)
-					log.info(currToken.toString() + " " + currToken.value.toString());
+				if (currToken != null && currToken.value != null) {
+					log.info("New token created(token class id: '" + currToken + "'; token value: '" + currToken.value.toString() + "').");
+				} else if (currToken != null) {
+					log.info("New token created(token class id: '" + currToken + "').");
+				}
 			}
+			
+			log.info("Ending lexical analysis.");
 		} 
 		finally {
 			if (br != null) try { br.close(); } catch (IOException e1) { log.error(e1.getMessage(), e1); }

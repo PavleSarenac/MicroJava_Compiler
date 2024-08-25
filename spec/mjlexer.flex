@@ -1,10 +1,13 @@
 package rs.ac.bg.etf.pp1;
 
 import java_cup.runtime.Symbol;
+import org.apache.log4j.*;
 
 %%
 
 %{
+	private Logger logger = Logger.getLogger(Yylex.class);
+
 	private Symbol new_symbol(int type) {
 		return new Symbol(type, yyline + 1, yycolumn);
 	}
@@ -81,4 +84,4 @@ import java_cup.runtime.Symbol;
 ['].[']                { return new_symbol(sym.CHARACTER, yytext().charAt(1)); }
 [a-zA-Z][a-zA-Z0-9_]*  { return new_symbol (sym.IDENTIFICATOR, yytext()); }
 
-. { System.err.println("Lexical analysis error during tokenization of '" + yytext() + "' (line " + (yyline + 1) + ", column " + (yycolumn + 1) + ")."); }
+. { logger.error("Lexical analysis error during tokenization of '" + yytext() + "' (line " + (yyline + 1) + ", column " + (yycolumn + 1) + ")."); }

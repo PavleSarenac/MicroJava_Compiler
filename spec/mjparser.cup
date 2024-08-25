@@ -1,15 +1,60 @@
 package rs.ac.bg.etf.pp1;
 
 import java_cup.runtime.*;
+import org.apache.log4j.*;
 import rs.ac.bg.etf.pp1.ast.*;
+
+parser code {:
+	private Logger logger = Logger.getLogger(getClass());
+	private boolean isErrorDetected = false;
+
+	public boolean isSyntaxAnalysisErrorDetected() {
+		return isErrorDetected;
+	}
+	
+    public void report_error(String message, Object info) {
+    	isErrorDetected = true;
+		int errorLineNumber = -1;
+		if (info instanceof Symbol) {
+			errorLineNumber = ((Symbol)info).left;
+		} else if (info instanceof Integer) {
+			errorLineNumber = (int)info;
+		}
+		if (errorLineNumber == -1) {
+			logger.error(message);
+		} else {
+			logger.error(message + " (line " + errorLineNumber + ").");
+		}
+    }
+    
+    public void syntax_error(Symbol cur_token) {
+        report_error("Syntax error", cur_token);
+    }
+     
+    public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
+        report_fatal_error("Fatal error, parsing must be stopped", cur_token);
+    }
+    
+    public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+      done_parsing();
+      report_error(message, info);
+    }
+:}
+
+scan with {:
+	Symbol symbol = this.getScanner().next_token();
+	if (symbol != null && symbol.value != null) {
+		logger.info("New token created(token class id: '" + symbol + "'; token value: '" + symbol.value.toString() + "').");
+	} else if (symbol != null) {
+		logger.info("New token created(token class id: '" + symbol + "').");
+	}
+	return symbol;
+:}
 
 terminal PROGRAM, BREAK, CONST, ELSE, IF, NEW, PRINT, READ, RETURN, VOID, CONTINUE, FOR;
 terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, LOGICAL_AND, LOGICAL_OR, ASSIGN, INCREMENT, DECREMENT, SEMICOLON, COLON, COMMA, LEFT_PARENTHESES, RIGHT_PARENTHESES, LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE;
-terminal Integer NUMBER;
-terminal Boolean BOOLEAN;
-terminal Character CHARACTER;
-terminal String IDENTIFICATOR;
+terminal NUMBER, BOOLEAN, CHARACTER, IDENTIFICATOR;
 
 nonterminal Program;
 
-Program ::= PROGRAM;
+Program ::= PROGRAM IDENTIFICATOR LEFT_BRACE RIGHT_BRACE;
