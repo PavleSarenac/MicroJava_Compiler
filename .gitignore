@@ -1,4 +1,8 @@
 /bin/
 /logs/
 /lib/
+/src/rs/ac/bg/etf/pp1/ast/
 /src/rs/ac/bg/etf/pp1/Yylex.java
+/src/rs/ac/bg/etf/pp1/sym.java
+/src/rs/ac/bg/etf/pp1/MJParser.java
+/spec/mjparser_astbuild.cup
