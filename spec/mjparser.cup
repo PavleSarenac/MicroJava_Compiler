@@ -53,11 +53,11 @@ scan with {:
 
 /* terminals */
 terminal PROGRAM, BREAK, CONST, ELSE, IF, NEW, PRINT, READ, RETURN, VOID, CONTINUE, FOR;
-terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, LOGICAL_AND, LOGICAL_OR, ASSIGN, INCREMENT, DECREMENT, SEMICOLON, COLON, COMMA, LEFT_PARENTHESES, RIGHT_PARENTHESES, LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE;
+terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, LOGICAL_AND, LOGICAL_OR, ASSIGN, INCREMENT, DECREMENT, SEMICOLON, COMMA, LEFT_PARENTHESES, RIGHT_PARENTHESES, LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE;
 terminal NUMBER, BOOLEAN, CHARACTER, IDENTIFICATOR;
 
 /* official nonterminals */
-nonterminal Program, ConstDecl, VarDecl, MethodDecl, FormPars, Type, Statement, DesignatorStatement, ActPars, Condition, CondTerm, CondFact, Expr, Term, Factor, Designator, Label, Assignop, Relop, Addop, Mulop;
+nonterminal Program, ConstDecl, VarDecl, MethodDecl, FormPars, Type, Statement, DesignatorStatement, ActPars, Condition, CondTerm, CondFact, Expr, Term, Factor, Designator, Assignop, Relop, Addop, Mulop;
 
 /* my nonterminals */
 nonterminal GlobalDeclList, GlobalDecl;
@@ -71,6 +71,16 @@ nonterminal OptionalMethodCall, OptionalActPars;
 nonterminal ExprArrayBrackets, ExprOneDimensionalArrayBrackets, ExprTwoDimensionalArrayBrackets;
 nonterminal DesignatorElementAccess;
 nonterminal TermExtension;
+nonterminal CondFactExtension;
+nonterminal CondTermExtension;
+nonterminal ConditionExtension;
+nonterminal OptionalExpr;
+nonterminal ForLoop, ForLoopInitialization, ForLoopCondition, ForLoopPostIteration, ForLoopInitializationExtension;
+nonterminal DesignatorStatementOperation, DesignatorStatementArrayUnpacking;
+nonterminal DesignatorList, OptionalDesignator;
+nonterminal OptionalElse;
+
+precedence left ELSE;
 
 /* official nonterminal #1 */
 Program ::= PROGRAM IDENTIFICATOR GlobalDeclList LEFT_BRACE MethodDeclList RIGHT_BRACE;
@@ -95,18 +105,31 @@ Type ::= IDENTIFICATOR;
 
 /* official nonterminal #10 */
 Statement ::= DesignatorStatement SEMICOLON
+            | IF LEFT_PARENTHESES Condition RIGHT_PARENTHESES Statement OptionalElse
+            | BREAK SEMICOLON
+            | CONTINUE SEMICOLON
+            | RETURN OptionalExpr SEMICOLON
             | READ LEFT_PARENTHESES Designator RIGHT_PARENTHESES SEMICOLON
             | PRINT LEFT_PARENTHESES PrintMethodActualParameters RIGHT_PARENTHESES SEMICOLON
+            | ForLoop
             | LEFT_BRACE MethodStatements RIGHT_BRACE;
             
 /* official nonterminal #11 */
-DesignatorStatement ::= Designator Assignop Expr
-                      | Designator INCREMENT
-                      | Designator DECREMENT;
+DesignatorStatement ::= Designator DesignatorStatementOperation
+                      | DesignatorStatementArrayUnpacking;
             
 /* official nonterminal #12 */
 ActPars ::= ActPars COMMA Expr
           | Expr;
+
+/* official nonterminal #13 */
+Condition ::= CondTerm ConditionExtension;
+
+/* official nonterminal #14 */
+CondTerm ::= CondFact CondTermExtension;
+
+/* official nonterminal #15 */
+CondFact ::= Expr CondFactExtension;
 
 /* official nonterminal #16 */
 Expr ::= OptionalMinusSign Term ExprExtension;
@@ -122,9 +145,6 @@ Factor ::= Designator OptionalMethodCall
          
 /* official nonterminal #19 */         
 Designator ::= IDENTIFICATOR DesignatorElementAccess;
-                 
-/* official nonterminal #20 */
-Label ::= IDENTIFICATOR;
 
 /* official nonterminal #21 */
 Assignop ::= ASSIGN;
@@ -216,3 +236,44 @@ DesignatorElementAccess ::= ExprArrayBrackets
                           
 TermExtension ::= TermExtension Mulop Factor
                 | /* epsilon */;
+                
+CondFactExtension ::= Relop Expr
+                    | /* epsilon */;
+                    
+CondTermExtension ::= CondTermExtension LOGICAL_AND CondFact
+                    | /* epsilon */;
+                    
+ConditionExtension ::= ConditionExtension LOGICAL_OR CondTerm
+                    | /* epsilon */;
+                    
+OptionalExpr ::= Expr
+               | /* epsilon */;
+               
+ForLoop ::= FOR LEFT_PARENTHESES ForLoopInitialization SEMICOLON ForLoopCondition SEMICOLON ForLoopPostIteration RIGHT_PARENTHESES Statement;
+
+ForLoopInitialization ::= DesignatorStatement ForLoopInitializationExtension
+                        | /* epsilon */;
+                        
+ForLoopInitializationExtension ::= ForLoopInitializationExtension COMMA DesignatorStatement
+                                 | /* epsilon */;
+                                 
+ForLoopCondition ::= CondFact
+                   | /* epsilon */;
+                   
+ForLoopPostIteration ::= ForLoopInitialization;
+
+DesignatorStatementOperation ::= Assignop Expr
+                               | LEFT_PARENTHESES OptionalActPars RIGHT_PARENTHESES
+                               | INCREMENT
+                               | DECREMENT;
+                               
+DesignatorStatementArrayUnpacking ::= LEFT_BRACKET DesignatorList MULTIPLY Designator RIGHT_BRACKET Assignop Designator;
+
+DesignatorList ::= DesignatorList OptionalDesignator COMMA
+                 | /* epsilon */;
+                 
+OptionalDesignator ::= Designator
+                     | /* epsilon */;
+                     
+OptionalElse ::= ELSE Statement
+               | /* epsilon */;

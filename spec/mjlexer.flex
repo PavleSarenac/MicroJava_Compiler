@@ -65,7 +65,6 @@ import org.apache.log4j.*;
 "++"  { return new_symbol(sym.INCREMENT, yytext()); }
 "--"  { return new_symbol(sym.DECREMENT, yytext()); }
 ";"   { return new_symbol(sym.SEMICOLON, yytext()); }
-":"   { return new_symbol(sym.COLON, yytext()); }
 ","   { return new_symbol(sym.COMMA, yytext()); }
 "("   { return new_symbol(sym.LEFT_PARENTHESES, yytext()); }
 ")"   { return new_symbol(sym.RIGHT_PARENTHESES, yytext()); }
