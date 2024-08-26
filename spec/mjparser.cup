@@ -50,17 +50,21 @@ scan with {:
 	}
 	return symbol;
 :}
- 
+
+/* terminals */
 terminal PROGRAM, BREAK, CONST, ELSE, IF, NEW, PRINT, READ, RETURN, VOID, CONTINUE, FOR;
 terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, LOGICAL_AND, LOGICAL_OR, ASSIGN, INCREMENT, DECREMENT, SEMICOLON, COLON, COMMA, LEFT_PARENTHESES, RIGHT_PARENTHESES, LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE;
 terminal NUMBER, BOOLEAN, CHARACTER, IDENTIFICATOR;
- 
-nonterminal Program, ConstDecl, Type, VarDecl, MethodDecl, FormPars;
+
+/* official nonterminals */
+nonterminal Program, ConstDecl, Type, VarDecl, MethodDecl, FormPars, Statement;
+
+/* my nonterminals */
 nonterminal GlobalDeclList, GlobalDecl;
 nonterminal ConstDeclList, ConstDeclElement, Const; 
 nonterminal VarDeclList, VarDeclElement; 
 nonterminal ArrayBrackets, OneDimenisonalArrayBrackets, TwoDimensionalArrayBrackets;
-nonterminal MethodDeclList, MethodReturnType, MethodFormalParameters, TypedVarDeclElement, MethodVariableDeclarations;
+nonterminal MethodDeclList, MethodReturnType, MethodFormalParameters, TypedVarDeclElement, MethodVariableDeclarations, MethodStatements;
 
 Program ::= PROGRAM IDENTIFICATOR GlobalDeclList LEFT_BRACE MethodDeclList RIGHT_BRACE;
  
@@ -101,7 +105,7 @@ TwoDimensionalArrayBrackets ::= OneDimenisonalArrayBrackets OneDimenisonalArrayB
 MethodDeclList ::= MethodDeclList MethodDecl
                  | /* epsilon */;
 
-MethodDecl ::= MethodReturnType IDENTIFICATOR LEFT_PARENTHESES MethodFormalParameters RIGHT_PARENTHESES MethodVariableDeclarations LEFT_BRACE RIGHT_BRACE;
+MethodDecl ::= MethodReturnType IDENTIFICATOR LEFT_PARENTHESES MethodFormalParameters RIGHT_PARENTHESES MethodVariableDeclarations LEFT_BRACE MethodStatements RIGHT_BRACE;
 
 MethodReturnType ::= Type
                    | VOID;
@@ -114,5 +118,8 @@ FormPars ::= FormPars COMMA TypedVarDeclElement
                
 TypedVarDeclElement ::= Type VarDeclElement;
                          
-MethodVariableDeclarations ::= VarDecl
+MethodVariableDeclarations ::= MethodVariableDeclarations VarDeclList
                              | /* epsilon */;
+                             
+MethodStatements ::= Statement
+                   | /* epsilon */;
