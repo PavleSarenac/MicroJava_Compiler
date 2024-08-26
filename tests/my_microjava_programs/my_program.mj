@@ -1,4 +1,7 @@
-program MyProgram 
+program MyProgram
+const int var1 = 4, var2 = 9;
+const bool var3 = true, var4 = false;
+const char var5 = 'f', var6 = '5';
 {
 
 }
