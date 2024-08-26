@@ -1,7 +1,13 @@
 program MyProgram
+
 const int var1 = 4, var2 = 9;
 const bool var3 = true, var4 = false;
 const char var5 = 'f', var6 = '5';
+
+int var7, var8[], var9[][];
+bool var10, var11[], var12[][];
+char var13[], var14[][], var15;
+
 {
 
 }
