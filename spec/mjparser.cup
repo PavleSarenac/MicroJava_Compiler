@@ -57,17 +57,95 @@ terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN
 terminal NUMBER, BOOLEAN, CHARACTER, IDENTIFICATOR;
 
 /* official nonterminals */
-nonterminal Program, ConstDecl, Type, VarDecl, MethodDecl, FormPars, Statement;
+nonterminal Program, ConstDecl, VarDecl, MethodDecl, FormPars, Type, Statement, DesignatorStatement, ActPars, Condition, CondTerm, CondFact, Expr, Term, Factor, Designator, Label, Assignop, Relop, Addop, Mulop;
 
 /* my nonterminals */
 nonterminal GlobalDeclList, GlobalDecl;
 nonterminal ConstDeclList, ConstDeclElement, Const; 
 nonterminal VarDeclList, VarDeclElement; 
-nonterminal ArrayBrackets, OneDimenisonalArrayBrackets, TwoDimensionalArrayBrackets;
+nonterminal ArrayBrackets, OneDimensionalArrayBrackets, TwoDimensionalArrayBrackets;
 nonterminal MethodDeclList, MethodReturnType, MethodFormalParameters, TypedVarDeclElement, MethodVariableDeclarations, MethodStatements;
+nonterminal PrintMethodActualParameters;
+nonterminal OptionalMinusSign, ExprExtension;
+nonterminal OptionalMethodCall, OptionalActPars;
+nonterminal ExprArrayBrackets, ExprOneDimensionalArrayBrackets, ExprTwoDimensionalArrayBrackets;
+nonterminal DesignatorElementAccess;
+nonterminal TermExtension;
 
+/* official nonterminal #1 */
 Program ::= PROGRAM IDENTIFICATOR GlobalDeclList LEFT_BRACE MethodDeclList RIGHT_BRACE;
- 
+
+/* official nonterminal #3 */
+ConstDecl ::= ConstDecl COMMA ConstDeclElement
+            | ConstDeclElement;
+            
+/* official nonterminal #4 */
+VarDecl ::= VarDecl COMMA VarDeclElement
+          | VarDeclElement;
+          
+/* official nonterminal #7 */
+MethodDecl ::= MethodReturnType IDENTIFICATOR LEFT_PARENTHESES MethodFormalParameters RIGHT_PARENTHESES MethodVariableDeclarations LEFT_BRACE MethodStatements RIGHT_BRACE;
+
+/* official nonterminal #8 */
+FormPars ::= FormPars COMMA TypedVarDeclElement
+           | TypedVarDeclElement;
+           
+/* official nonterminal #9 */
+Type ::= IDENTIFICATOR;
+
+/* official nonterminal #10 */
+Statement ::= DesignatorStatement SEMICOLON
+            | READ LEFT_PARENTHESES Designator RIGHT_PARENTHESES SEMICOLON
+            | PRINT LEFT_PARENTHESES PrintMethodActualParameters RIGHT_PARENTHESES SEMICOLON
+            | LEFT_BRACE MethodStatements RIGHT_BRACE;
+            
+/* official nonterminal #11 */
+DesignatorStatement ::= Designator Assignop Expr
+                      | Designator INCREMENT
+                      | Designator DECREMENT;
+            
+/* official nonterminal #12 */
+ActPars ::= ActPars COMMA Expr
+          | Expr;
+
+/* official nonterminal #16 */
+Expr ::= OptionalMinusSign Term ExprExtension;
+
+/* official nonterminal #17 */
+Term ::= Factor TermExtension;
+            
+/* official nonterminal #18 */
+Factor ::= Designator OptionalMethodCall
+         | Const
+         | NEW Type ExprArrayBrackets
+         | LEFT_PARENTHESES Expr RIGHT_PARENTHESES;
+         
+/* official nonterminal #19 */         
+Designator ::= IDENTIFICATOR DesignatorElementAccess;
+                 
+/* official nonterminal #20 */
+Label ::= IDENTIFICATOR;
+
+/* official nonterminal #21 */
+Assignop ::= ASSIGN;
+
+/* official nonterminal #22 */
+Relop ::= EQUALS
+        | NOT_EQUALS
+        | GREATER_THAN
+        | GREATER_THAN_OR_EQUAL
+        | LESS_THAN
+        | LESS_THAN_OR_EQUAL;
+     
+/* official nonterminal #23 */
+Addop ::= PLUS
+        | MINUS;
+
+/* official nonterminal #24 */
+Mulop ::= MULTIPLY
+        | DIVIDE
+        | MODULO;
+
 GlobalDeclList ::= GlobalDeclList GlobalDecl
                  | /* epsilon */;
                  
@@ -75,11 +153,6 @@ GlobalDecl ::= ConstDeclList
              | VarDeclList;
 
 ConstDeclList ::= CONST Type ConstDecl SEMICOLON;
-
-Type ::= IDENTIFICATOR;
-
-ConstDecl ::= ConstDecl COMMA ConstDeclElement
-            | ConstDeclElement;
                 
 ConstDeclElement ::= IDENTIFICATOR ASSIGN Const;
 
@@ -88,38 +161,58 @@ Const ::= NUMBER
         | BOOLEAN;
         
 VarDeclList ::= Type VarDecl SEMICOLON;
-
-VarDecl ::= VarDecl COMMA VarDeclElement
-          | VarDeclElement;
               
 VarDeclElement ::= IDENTIFICATOR ArrayBrackets;
 
-ArrayBrackets ::= OneDimenisonalArrayBrackets
+ArrayBrackets ::= OneDimensionalArrayBrackets
                 | TwoDimensionalArrayBrackets
                 | /* epsilon */;
                 
-OneDimenisonalArrayBrackets ::= LEFT_BRACKET RIGHT_BRACKET;
+OneDimensionalArrayBrackets ::= LEFT_BRACKET RIGHT_BRACKET;
 
-TwoDimensionalArrayBrackets ::= OneDimenisonalArrayBrackets OneDimenisonalArrayBrackets;
+TwoDimensionalArrayBrackets ::= OneDimensionalArrayBrackets OneDimensionalArrayBrackets;
 
 MethodDeclList ::= MethodDeclList MethodDecl
                  | /* epsilon */;
-
-MethodDecl ::= MethodReturnType IDENTIFICATOR LEFT_PARENTHESES MethodFormalParameters RIGHT_PARENTHESES MethodVariableDeclarations LEFT_BRACE MethodStatements RIGHT_BRACE;
 
 MethodReturnType ::= Type
                    | VOID;
                    
 MethodFormalParameters ::= FormPars
                          | /* epsilon */;
-                         
-FormPars ::= FormPars COMMA TypedVarDeclElement
-               | TypedVarDeclElement;
                
 TypedVarDeclElement ::= Type VarDeclElement;
                          
 MethodVariableDeclarations ::= MethodVariableDeclarations VarDeclList
                              | /* epsilon */;
                              
-MethodStatements ::= Statement
+MethodStatements ::= MethodStatements Statement
                    | /* epsilon */;
+            
+PrintMethodActualParameters ::= Expr COMMA NUMBER
+                              | Expr;
+
+OptionalMinusSign ::= MINUS
+                    | /* epsilon */;
+                    
+ExprExtension ::= ExprExtension Addop Term
+                | /* epsilon */;
+                    
+OptionalMethodCall ::= LEFT_PARENTHESES OptionalActPars RIGHT_PARENTHESES
+                     | /* epsilon */;
+                     
+OptionalActPars ::= ActPars
+                  | /* epsilon */;
+                    
+ExprArrayBrackets ::= ExprOneDimensionalArrayBrackets
+                    | ExprTwoDimensionalArrayBrackets;
+
+ExprOneDimensionalArrayBrackets ::= LEFT_BRACKET Expr RIGHT_BRACKET;
+
+ExprTwoDimensionalArrayBrackets ::= ExprOneDimensionalArrayBrackets ExprOneDimensionalArrayBrackets;
+
+DesignatorElementAccess ::= ExprArrayBrackets
+                          | /* epsilon */;
+                          
+TermExtension ::= TermExtension Mulop Factor
+                | /* epsilon */;
