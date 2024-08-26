@@ -10,4 +10,24 @@ char var13[], var14[][], var15;
 
 {
 
+int func1(int p1, int p2, bool p3, char p4)
+{
+
+}
+
+bool func2(int p1)
+{
+
+}
+
+char func3()
+{
+
+}
+
+void main()
+{
+
+}
+
 }

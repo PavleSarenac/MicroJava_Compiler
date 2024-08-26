@@ -55,26 +55,27 @@ terminal PROGRAM, BREAK, CONST, ELSE, IF, NEW, PRINT, READ, RETURN, VOID, CONTIN
 terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, LOGICAL_AND, LOGICAL_OR, ASSIGN, INCREMENT, DECREMENT, SEMICOLON, COLON, COMMA, LEFT_PARENTHESES, RIGHT_PARENTHESES, LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE;
 terminal NUMBER, BOOLEAN, CHARACTER, IDENTIFICATOR;
  
-nonterminal Program, ConstDecl, Type, VarDecl;
+nonterminal Program, ConstDecl, Type, VarDecl, MethodDecl, FormPars;
 nonterminal GlobalDeclList, GlobalDecl;
 nonterminal ConstDeclList, ConstDeclElement, Const; 
 nonterminal VarDeclList, VarDeclElement; 
 nonterminal ArrayBrackets, OneDimenisonalArrayBrackets, TwoDimensionalArrayBrackets;
+nonterminal MethodDeclList, MethodReturnType, MethodFormalParameters, TypedVarDeclElement, MethodVariableDeclarations;
 
-Program ::= PROGRAM IDENTIFICATOR GlobalDeclList LEFT_BRACE RIGHT_BRACE;
+Program ::= PROGRAM IDENTIFICATOR GlobalDeclList LEFT_BRACE MethodDeclList RIGHT_BRACE;
  
 GlobalDeclList ::= GlobalDeclList GlobalDecl
                  | /* epsilon */;
                  
-GlobalDecl ::= ConstDecl
-             | VarDecl;
+GlobalDecl ::= ConstDeclList
+             | VarDeclList;
 
-ConstDecl ::= CONST Type ConstDeclList SEMICOLON;
+ConstDeclList ::= CONST Type ConstDecl SEMICOLON;
 
 Type ::= IDENTIFICATOR;
 
-ConstDeclList ::= ConstDeclList COMMA ConstDeclElement
-                | ConstDeclElement;
+ConstDecl ::= ConstDecl COMMA ConstDeclElement
+            | ConstDeclElement;
                 
 ConstDeclElement ::= IDENTIFICATOR ASSIGN Const;
 
@@ -82,10 +83,10 @@ Const ::= NUMBER
         | CHARACTER
         | BOOLEAN;
         
-VarDecl ::= Type VarDeclList SEMICOLON;
+VarDeclList ::= Type VarDecl SEMICOLON;
 
-VarDeclList ::= VarDeclList COMMA VarDeclElement
-              | VarDeclElement;
+VarDecl ::= VarDecl COMMA VarDeclElement
+          | VarDeclElement;
               
 VarDeclElement ::= IDENTIFICATOR ArrayBrackets;
 
@@ -96,3 +97,22 @@ ArrayBrackets ::= OneDimenisonalArrayBrackets
 OneDimenisonalArrayBrackets ::= LEFT_BRACKET RIGHT_BRACKET;
 
 TwoDimensionalArrayBrackets ::= OneDimenisonalArrayBrackets OneDimenisonalArrayBrackets;
+
+MethodDeclList ::= MethodDeclList MethodDecl
+                 | /* epsilon */;
+
+MethodDecl ::= MethodReturnType IDENTIFICATOR LEFT_PARENTHESES MethodFormalParameters RIGHT_PARENTHESES MethodVariableDeclarations LEFT_BRACE RIGHT_BRACE;
+
+MethodReturnType ::= Type
+                   | VOID;
+                   
+MethodFormalParameters ::= FormPars
+                         | /* epsilon */;
+                         
+FormPars ::= FormPars COMMA TypedVarDeclElement
+               | TypedVarDeclElement;
+               
+TypedVarDeclElement ::= Type VarDeclElement;
+                         
+MethodVariableDeclarations ::= VarDecl
+                             | /* epsilon */;
