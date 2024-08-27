@@ -40,16 +40,6 @@ parser code {:
       report_error(message, info);
     }
 :}
- 
-scan with {:
-	Symbol symbol = this.getScanner().next_token();
-	if (symbol != null && symbol.value != null) {
-		logger.info("New token created(token class id: '" + symbol + "'; token value: '" + symbol.value.toString() + "').");
-	} else if (symbol != null) {
-		logger.info("New token created(token class id: '" + symbol + "').");
-	}
-	return symbol;
-:}
 
 /* terminals */
 terminal PROGRAM, BREAK, CONST, ELSE, IF, NEW, PRINT, READ, RETURN, VOID, CONTINUE, FOR;
