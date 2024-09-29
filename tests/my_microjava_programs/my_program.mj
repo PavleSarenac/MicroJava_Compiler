@@ -1,37 +1,8 @@
 program MyProgram
- 
-const int var1 = 4, var2 = 9;
-const bool var3 = true, var4 = false;
-const char var5 = 'f', var6 = '5';
- 
-int var7, var8[], var9[][];
-bool var10, var11[], var12[][];
-char var13[], var14[][], var15;
+
+int var1, 67, var2, var3, var4;
+int var5, 22;
  
 {
- 
-	int func1(int p1, int p2, bool p3[], char p4[][])
-		int loc1, loc2[], loc3[][];
-		char loc4[], loc5;
-		bool loc6;
-	{
-		print(5);
-		print(2, 2);
-	}
- 
-	bool func2(int p1)
-	{
-	
-	}
- 
-	char func3()
-	{
-	
-	}
-	
-	void main()
-	{
-	
-	}
- 
+
 }

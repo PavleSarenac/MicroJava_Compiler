@@ -27,14 +27,14 @@ public class Compiler {
 		}
 		try (
 			FileReader fileReader = new FileReader(args[0]);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			BufferedReader bufferedReader = new BufferedReader(fileReader)
         ) {
 			logger.debug("Compiling source file: " + args[0]);
 			Yylex lexer = new Yylex(bufferedReader);
 			MJParser parser = new MJParser(lexer);
 			Symbol abstractSyntaxTreeRootSymbol = parser.parse();
 			if (parser.isSyntaxAnalysisErrorDetected()) {
-				logger.error("Syntax analysis has failed. Aborting compilation.");
+				logger.error("Syntax analysis has failed, aborting compilation.");
 				System.exit(2);
 			}
 			logger.debug("Syntax analysis has completed successfully.");

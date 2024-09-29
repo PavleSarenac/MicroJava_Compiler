@@ -32,7 +32,7 @@ parser code {:
     }
     
     public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
-        report_fatal_error("Fatal error, parsing must be stopped", cur_token);
+        report_fatal_error("Unrecovered syntax error, parsing must be stopped", cur_token);
     }
     
     public void report_fatal_error(String message, Object info) throws java.lang.Exception {
@@ -42,8 +42,8 @@ parser code {:
 :}
 
 /* terminals */
-terminal PROGRAM, BREAK, CONST, ELSE, IF, NEW, PRINT, READ, RETURN, VOID, CONTINUE, FOR;
-terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, LOGICAL_AND, LOGICAL_OR, ASSIGN, INCREMENT, DECREMENT, SEMICOLON, COMMA, LEFT_PARENTHESES, RIGHT_PARENTHESES, LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE;
+terminal PROGRAM, BREAK, CLASS, ELSE, CONST, IF, NEW, PRINT, READ, RETURN, VOID, EXTENDS, CONTINUE, FOR, STATIC;
+terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, LOGICAL_AND, LOGICAL_OR, ASSIGN, INCREMENT, DECREMENT, SEMICOLON, COMMA, DOT, LEFT_PARENTHESES, RIGHT_PARENTHESES, LEFT_BRACKET, RIGHT_BRACKET, LEFT_BRACE, RIGHT_BRACE;
 terminal NUMBER, BOOLEAN, CHARACTER, IDENTIFICATOR;
 
 /* official nonterminals */
@@ -170,7 +170,8 @@ Const ::= NUMBER
         | CHARACTER
         | BOOLEAN;
         
-VarDeclList ::= Type VarDecl SEMICOLON;
+VarDeclList ::= Type VarDecl SEMICOLON
+              | error SEMICOLON:s {: parser.report_error("Syntax error during global variable declaration, recovery performed until next ';'", sleft); :};
               
 VarDeclElement ::= IDENTIFICATOR ArrayBrackets;
 
