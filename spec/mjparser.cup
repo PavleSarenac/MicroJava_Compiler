@@ -59,7 +59,7 @@ nonterminal PrintMethodActualParameters;
 nonterminal OptionalMinusSign, ExprExtension;
 nonterminal OptionalMethodCall, OptionalActPars;
 nonterminal ExprArrayBrackets, ExprOneDimensionalArrayBrackets, ExprTwoDimensionalArrayBrackets;
-nonterminal DesignatorElementAccess;
+nonterminal OptionalDesignatorAccess, DesignatorClassElementAccess, DesignatorArrayAccess;
 nonterminal TermExtension;
 nonterminal CondFactExtension;
 nonterminal CondTermExtension;
@@ -134,7 +134,7 @@ Factor ::= Designator OptionalMethodCall
          | LEFT_PARENTHESES Expr RIGHT_PARENTHESES;
          
 /* official nonterminal #19 */         
-Designator ::= IDENTIFICATOR DesignatorElementAccess;
+Designator ::= IDENTIFICATOR OptionalDesignatorAccess;
 
 /* official nonterminal #21 */
 Assignop ::= ASSIGN;
@@ -222,8 +222,13 @@ ExprOneDimensionalArrayBrackets ::= LEFT_BRACKET Expr RIGHT_BRACKET;
 
 ExprTwoDimensionalArrayBrackets ::= ExprOneDimensionalArrayBrackets ExprOneDimensionalArrayBrackets;
 
-DesignatorElementAccess ::= ExprArrayBrackets
-                          | /* epsilon */;
+OptionalDesignatorAccess ::= OptionalDesignatorAccess DesignatorClassElementAccess
+                           | OptionalDesignatorAccess DesignatorArrayAccess
+                           | /* epsilon */;
+
+DesignatorClassElementAccess ::= DOT IDENTIFICATOR;
+
+DesignatorArrayAccess ::= ExprOneDimensionalArrayBrackets;
                           
 TermExtension ::= TermExtension Mulop Factor
                 | /* epsilon */;
