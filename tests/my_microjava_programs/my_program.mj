@@ -1,8 +1,15 @@
 program MyProgram
 
-int var1, 67, var2, var3, var4;
-int var5, 22;
+int var1, var2, var3, var4;
+int var5;
  
 {
+
+    int main()
+    {
+        objekat.atr1[3][5].atr2[1][2][3]= 5;
+        arr = new int[5];
+        obj = new Obj(2, 5, '5', false);
+    }
 
 }

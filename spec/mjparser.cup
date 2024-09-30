@@ -64,6 +64,7 @@ nonterminal TermExtension;
 nonterminal CondFactExtension;
 nonterminal CondTermExtension;
 nonterminal ConditionExtension;
+nonterminal NewTypeInstantiation, NewArrayInstantiation, NewObjectInstantiation;
 nonterminal OptionalExpr;
 nonterminal ForLoop, ForLoopInitialization, ForLoopCondition, ForLoopPostIteration, ForLoopInitializationExtension;
 nonterminal DesignatorStatementOperation, DesignatorStatementArrayUnpacking;
@@ -130,7 +131,7 @@ Term ::= Factor TermExtension;
 /* official nonterminal #18 */
 Factor ::= Designator OptionalMethodCall
          | Const
-         | NEW Type ExprArrayBrackets
+         | NEW Type NewTypeInstantiation
          | LEFT_PARENTHESES Expr RIGHT_PARENTHESES;
          
 /* official nonterminal #19 */         
@@ -221,6 +222,13 @@ ExprArrayBrackets ::= ExprOneDimensionalArrayBrackets
 ExprOneDimensionalArrayBrackets ::= LEFT_BRACKET Expr RIGHT_BRACKET;
 
 ExprTwoDimensionalArrayBrackets ::= ExprOneDimensionalArrayBrackets ExprOneDimensionalArrayBrackets;
+
+NewTypeInstantiation ::= NewArrayInstantiation
+                       | NewObjectInstantiation;
+
+NewArrayInstantiation ::= ExprArrayBrackets;
+
+NewObjectInstantiation ::= LEFT_PARENTHESES ActPars RIGHT_PARENTHESES;
 
 OptionalDesignatorAccess ::= OptionalDesignatorAccess DesignatorClassElementAccess
                            | OptionalDesignatorAccess DesignatorArrayAccess
