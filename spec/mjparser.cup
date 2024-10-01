@@ -47,7 +47,7 @@ terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, EQUALS, NOT_EQUALS, GREATER_THAN
 terminal NUMBER, BOOLEAN, CHARACTER, IDENTIFICATOR;
 
 /* official nonterminals */
-nonterminal Program, ConstDecl, VarDecl, MethodDecl, FormPars, Type, Statement, DesignatorStatement, ActPars, Condition, CondTerm, CondFact, Expr, Term, Factor, Designator, Assignop, Relop, Addop, Mulop;
+nonterminal Program, ConstDecl, VarDecl, ClassDecl, StaticInitializer, MethodDecl, FormPars, Type, Statement, DesignatorStatement, ActPars, Condition, CondTerm, CondFact, Expr, Term, Factor, Designator, Assignop, Relop, Addop, Mulop;
 
 /* my nonterminals */
 nonterminal GlobalDeclList, GlobalDecl;
@@ -70,6 +70,7 @@ nonterminal ForLoop, ForLoopInitialization, ForLoopCondition, ForLoopPostIterati
 nonterminal DesignatorStatementOperation, DesignatorStatementArrayUnpacking;
 nonterminal DesignatorList, OptionalDesignator;
 nonterminal OptionalElse;
+nonterminal OptionalClassExtension, OptionalClassStaticVarDecl, OptionalClassStaticInitializer, OptionalClassVarDecl, OptionalClassMethodDecl;
 
 precedence left ELSE;
 
@@ -83,7 +84,13 @@ ConstDecl ::= ConstDecl COMMA ConstDeclElement
 /* official nonterminal #4 */
 VarDecl ::= VarDecl COMMA VarDeclElement
           | VarDeclElement;
-          
+
+/* official nonterminal #5 */
+ClassDecl ::= CLASS IDENTIFICATOR OptionalClassExtension LEFT_BRACE OptionalClassStaticVarDecl OptionalClassStaticInitializer OptionalClassVarDecl OptionalClassMethodDecl RIGHT_BRACE;
+
+/* official nonterminal #6 */
+StaticInitializer ::= STATIC LEFT_BRACE MethodStatements RIGHT_BRACE;
+
 /* official nonterminal #7 */
 MethodDecl ::= MethodReturnType IDENTIFICATOR LEFT_PARENTHESES MethodFormalParameters RIGHT_PARENTHESES MethodVariableDeclarations LEFT_BRACE MethodStatements RIGHT_BRACE;
 
@@ -161,7 +168,8 @@ GlobalDeclList ::= GlobalDeclList GlobalDecl
                  | /* epsilon */;
                  
 GlobalDecl ::= ConstDeclList
-             | VarDeclList;
+             | VarDeclList
+             | ClassDecl;
 
 ConstDeclList ::= CONST Type ConstDecl SEMICOLON;
                 
@@ -228,7 +236,7 @@ NewTypeInstantiation ::= NewArrayInstantiation
 
 NewArrayInstantiation ::= ExprArrayBrackets;
 
-NewObjectInstantiation ::= LEFT_PARENTHESES ActPars RIGHT_PARENTHESES;
+NewObjectInstantiation ::= LEFT_PARENTHESES OptionalActPars RIGHT_PARENTHESES;
 
 OptionalDesignatorAccess ::= OptionalDesignatorAccess DesignatorClassElementAccess
                            | OptionalDesignatorAccess DesignatorArrayAccess
@@ -281,3 +289,18 @@ OptionalDesignator ::= Designator
                      
 OptionalElse ::= ELSE Statement
                | /* epsilon */;
+
+OptionalClassExtension ::= EXTENDS Type
+                         | /* epsilon */;
+
+OptionalClassStaticVarDecl ::= OptionalClassStaticVarDecl STATIC VarDeclList
+                             | /* epsilon */;
+
+OptionalClassStaticInitializer ::= StaticInitializer
+                                 | /* epsilon */;
+
+OptionalClassVarDecl ::= OptionalClassVarDecl VarDeclList
+                       | /* epsilon */;
+
+OptionalClassMethodDecl ::= LEFT_BRACE MethodDeclList RIGHT_BRACE
+                          | /* epsilon */;
