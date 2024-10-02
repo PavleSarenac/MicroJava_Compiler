@@ -29,8 +29,8 @@ public class SyntaxAnalysisTest {
 		try {
 			// File sourceCode = new File("tests/my_microjava_programs/my_program.mj");
 			// File sourceCode = new File("tests/official_microjava_programs/test301.mj");
-			File sourceCode = new File("tests/official_microjava_programs/test302.mj");
-			// File sourceCode = new File("tests/official_microjava_programs/test303.mj");
+			// File sourceCode = new File("tests/official_microjava_programs/test302.mj");
+			File sourceCode = new File("tests/official_microjava_programs/test303.mj");
 			log.info("Compiling source file: " + sourceCode.getAbsolutePath());
 
 			br = new BufferedReader(new FileReader(sourceCode));
