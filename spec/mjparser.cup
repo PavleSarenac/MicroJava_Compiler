@@ -70,7 +70,7 @@ nonterminal ForLoop, ForLoopInitialization, ForLoopCondition, ForLoopPostIterati
 nonterminal DesignatorStatementOperation, DesignatorStatementArrayUnpacking;
 nonterminal DesignatorList, OptionalDesignator;
 nonterminal OptionalElse;
-nonterminal OptionalClassExtension, OptionalClassStaticVarDecl, OptionalClassStaticInitializer, OptionalClassVarDecl, OptionalClassMethodDecl;
+nonterminal OptionalClassExtension, OptionalClassStaticMembers, ClassStaticMembersList, ClassStaticMember, OptionalClassVarDecl, OptionalClassMethodDecl;
 
 precedence left ELSE;
 
@@ -86,7 +86,7 @@ VarDecl ::= VarDecl COMMA VarDeclElement
           | VarDeclElement;
 
 /* official nonterminal #5 */
-ClassDecl ::= CLASS IDENTIFICATOR OptionalClassExtension LEFT_BRACE OptionalClassStaticVarDecl OptionalClassStaticInitializer OptionalClassVarDecl OptionalClassMethodDecl RIGHT_BRACE;
+ClassDecl ::= CLASS IDENTIFICATOR OptionalClassExtension LEFT_BRACE OptionalClassStaticMembers OptionalClassVarDecl OptionalClassMethodDecl RIGHT_BRACE;
 
 /* official nonterminal #6 */
 StaticInitializer ::= STATIC LEFT_BRACE MethodStatements RIGHT_BRACE;
@@ -293,11 +293,14 @@ OptionalElse ::= ELSE Statement
 OptionalClassExtension ::= EXTENDS Type
                          | /* epsilon */;
 
-OptionalClassStaticVarDecl ::= OptionalClassStaticVarDecl STATIC VarDeclList
+OptionalClassStaticMembers ::= ClassStaticMembersList
                              | /* epsilon */;
 
-OptionalClassStaticInitializer ::= StaticInitializer
-                                 | /* epsilon */;
+ClassStaticMembersList ::= ClassStaticMembersList ClassStaticMember
+                         | ClassStaticMember;
+
+ClassStaticMember ::= STATIC VarDeclList
+                    | StaticInitializer;
 
 OptionalClassVarDecl ::= OptionalClassVarDecl VarDeclList
                        | /* epsilon */;
